@@ -1,0 +1,46 @@
+module reg_file(
+	input wire 			clk,
+	input wire 			rst,
+	input wire 			we,
+	input wire [4:0]	sel,
+	input wire [1:0]	ext_op, 
+	inout reg [15:0]	bus
+);
+
+
+reg [7:0] register_file[0:11];
+wire big_mode = sel[4];
+
+integer i;
+
+localparam EXT_INC = 2'b01;
+localparam EXT_DEC = 2'b10;
+localparam EXT_INC2  = 2'b11;
+
+always@(posedge clk or negedge rst) begin
+	if(!rst) begin
+		for(i = 0; i < 12; i=i+1) begin
+			register_file[i] = 8'b0;
+		end
+	end
+	else begin
+		if		  (ext_op == EXT_INC) 	{register_file[sel[3:0]],register_file[sel[3:0]+1]} = {register_file[sel[3:0]],register_file[sel[3:0]+1]} + 1;
+		else if (ext_op == EXT_DEC) 	{register_file[sel[3:0]],register_file[sel[3:0]+1]} = {register_file[sel[3:0]],register_file[sel[3:0]+1]} + 2;
+		else if (ext_op == EXT_INC2)	{register_file[sel[3:0]],register_file[sel[3:0]+1]} = {register_file[sel[3:0]],register_file[sel[3:0]+1]} - 1;
+		else begin
+			if(we) begin
+				if(big_mode) {register_file[sel[3:0]],register_file[sel[3:0]+1]} <= bus; 
+				else 			 register_file[sel[3:0]] <= bus[3:0];
+			end
+			else begin
+				if(big_mode) bus <= {register_file[sel[3:0]],register_file[sel[3:0]+1]};
+				else 			 bus[3:0] <= register_file[sel[3:0]];
+			end
+		end	
+	end
+end
+
+
+
+
+endmodule

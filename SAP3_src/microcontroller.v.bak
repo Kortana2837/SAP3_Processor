@@ -1,0 +1,12 @@
+module microcontroller
+#(parameter i_o_pins = 8)
+(
+	input clk,
+	input rst,
+	inout [i_o_pins-1:0]i_o
+);
+
+
+
+
+endmodule

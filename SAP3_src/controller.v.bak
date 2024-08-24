@@ -1,0 +1,103 @@
+module controller(
+	input wire clk,
+	input rst,
+	input[7:0] opcode,
+	input[7:0] flags,
+	output reg [32:0] ctrl_word
+);
+
+
+
+reg[3:0] stage;
+reg stage_rst;
+
+assign out = ctrl_word;
+
+
+
+// 8-bits Registers select
+localparam REG_B = 5'b00000;
+localparam REG_C = 5'b00001;
+localparam REG_D = 5'b00010;
+localparam REG_E = 5'b00011;
+localparam REG_H = 5'b00100;
+localparam REG_L = 5'b00101;
+localparam REG_W = 5'b00110;
+localparam REG_Z = 5'b00111;
+
+// 16-bits Registers select
+localparam REG_BC = 5'b10000;
+localparam REG_DE = 5'b10010;
+localparam REG_HL = 5'b10100;
+localparam REG_WZ = 5'b10110;
+localparam REG_PC = 5'b10101;
+localparam REG_SP = 5'b10110;
+
+// External Operations in Register File
+localparam REG_INC = 2'b01;
+localparam REG_DEC = 2'b10;
+localparam REG_INC2  = 2'b11;
+
+
+// Control pins
+
+localparam REG_OE 		= 10;
+localparam ALU_OE 		= 9;
+localparam MEM_OE 		= 8;
+localparam ALU_FLAGS_OE = 7; 
+localparam REG_EXT1		= 6;
+localparam REG_EXT0		= 5;
+localparam REG_RD_SEL4 	= 4;
+localparam REG_RD_SEL3 	= 3;
+localparam REG_RD_SEL2 	= 2;
+localparam REG_RD_SEL1 	= 1;
+localparam REG_RD_SEL0 	= 0;
+
+
+always @(negedge clk, negedge rst) begin
+	if(!rst) stage <= 0;
+	else begin
+		if(stage_rst) begin
+			stage <= 0;
+		end else begin
+			stage <= stage + 1;
+		end
+	end
+end
+
+
+
+
+always @(*) begin
+	ctrl_word = 0;
+	stage_rst = 0;
+	
+	// Fetch Cycle
+	
+	// Put the PC content to the MAR
+	if (stage == 0) begin
+		ctrl_word[REG_RD_SEL4:REG_RD_SEL0] = REG_PC;
+		ctrl_word[REG_OE] = 1'b1;
+		ctrl_word[MEM_MAR_WE] = 1'b1;
+	
+	// Get the instruction from the memory to the instruction regsiter
+	end else if (stage == 1) begin
+		ctrl_word[MEM_OE] = 1'b1;
+		ctrl_word[IR_WE] = 1'b1;
+		
+	// Increment the PC
+	end else if (stage == 2) begin
+		ctrl_word[REG_WR_SEL4:REG_WR_SEL0] = REG_PC;
+		ctrl_word[REG_EXT1:REG_EXT0] = REG_INC;
+		
+	// Excute the instruction
+	end else begin
+		casez (opcode)
+		// ...
+		// ...
+		// ...
+		endcase
+	end
+end
+
+endmodule

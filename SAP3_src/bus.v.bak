@@ -1,0 +1,14 @@
+reg[15:0] bus;
+
+always @(*) begin
+	bus = 16'b0;
+
+	if (reg_oe)
+		bus = reg_out;
+	else if (mem_oe)
+		bus = {8'b0, mem_out};
+	else if (alu_oe)
+		bus = {8'b0, alu_out};
+	else if (alu_flags_oe)
+		bus = {8'b0, alu_flags};
+end

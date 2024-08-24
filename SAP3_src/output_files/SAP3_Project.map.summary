@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Thu Dec 21 13:15:04 2023
+Quartus Prime Version : 21.1.1 Build 850 06/23/2022 SJ Lite Edition
+Revision Name : SAP3_Project
+Top-level Entity Name : processor_core
+Family : Cyclone V
+Logic utilization (in ALMs) : N/A
+Total registers : 248
+Total pins : 26
+Total virtual pins : 0
+Total block memory bits : 524,288
+Total DSP Blocks : 0
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 0
+Total DLLs : 0

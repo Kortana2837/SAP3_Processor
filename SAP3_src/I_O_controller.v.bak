@@ -1,0 +1,38 @@
+module I_O_controller(
+	input clk,
+	input rst,
+	input out_en,
+	inout reg [15:0] bus,
+	inout reg [7:0]data,
+	output ack,
+	output reg [7:0]address,
+	output reg output_bus
+);
+
+reg [7:0] data_in;
+
+localparam DATA_IN 		= 0;
+localparam DATA_OUTPUT  = 1;
+
+always@(posedge clk or negedge rst) begin
+	if(!rst) begin
+	
+	end
+	else begin
+		if(out_en) begin
+			{address,data} <= bus;
+			output_bus <= DATA_OUTPUT;
+		end
+		else begin
+			output_bus <= DATA_IN;
+			address <= bus[15:8];
+			bus[7:0] <= data;
+		end
+	end
+end
+
+
+
+
+
+endmodule

@@ -1,0 +1,46 @@
+module processor_core_tb();
+integer i;
+
+reg rst;
+reg clk;
+
+wire [15:0] address_bus;
+wire [7:0] data_bus;
+
+top top(
+	clk,
+	rst,
+	address_bus,
+	data_bus
+);
+
+
+//initial begin
+//	$dumpfile("top_tb.vcd");
+//	$dumpvars(0, top_tb);
+//	for (i = 0; i < 12; i = i + 1) begin
+//		$dumpvars(0, reg_file.data[i]);
+//	end
+//	for (i = 230; i < 256; i = i + 1) begin
+//		$dumpvars(0, memory.ram[i]);
+//	end
+//	rst = 1;
+//	#1 rst = 0;
+//end
+
+initial begin
+	clk = 0;
+	rst = 0;
+	
+	#1;
+	rst = 1;
+	#1;
+	rst = 0;
+	for (i = 0; i < 100; i = i + 1) begin
+		#10 clk = ~clk;
+	end
+end
+
+
+
+endmodule
